@@ -5,6 +5,8 @@ const id = 'ingres_unixodbc'
 const name = 'Ingres unixODBC'
 
 // TODO Ingres specific
+// as of 2018-05-15 https://github.com/wankdanker/node-odbc does not offer a schema interface
+// Consider adding a SCHEMA_SQL config option?
 const SCHEMA_SQL = `
     SELECT
         varchar(table_owner) as table_schema,
@@ -12,7 +14,7 @@ const SCHEMA_SQL = `
         varchar(column_name) as column_name,
         lower(varchar(column_datatype)) as data_type
     FROM iicolumns
-    WHERE 
+    WHERE
         table_owner != '$ingres'
     ORDER BY
         table_owner,
@@ -106,7 +108,7 @@ const fields = [
     key: 'password',
     formType: 'PASSWORD',
     label: 'Database Password (optional)'
-  }  // TODO encryption option?
+  }
 ]
 
 module.exports = {
