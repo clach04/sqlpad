@@ -34,6 +34,7 @@ function runQuery(query, connection) {
     connection_string: connection.connection_string
   }
   // TODO use connection pool
+  // TODO handle connection.maxRows
 
 
   var cn = config.connection_string;
