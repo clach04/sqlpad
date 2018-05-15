@@ -7,10 +7,10 @@ const name = 'Ingres unixODBC'
 // TODO Ingres specific
 const SCHEMA_SQL = `
     SELECT
-        table_owner,
-        table_name,
-        column_name,
-        column_datatype
+        varchar(table_owner) as table_schema,
+        varchar(table_name) as table_name,
+        varchar(column_name) as column_name,
+        varchar(column_datatype) as data_type
     FROM iicolumns
     WHERE 
         table_owner != '$ingres'
@@ -44,7 +44,6 @@ function runQuery(query, connection) {
   return openConnection(cn).then(connectionStatus => {
     return executeQuery(query)
   }).then(queryResult => {
-    console.log(queryResult)
     odbc.close();  // TODO consider putting into finally()?
     return Promise.resolve({rows: queryResult, incomplete: false})
   })

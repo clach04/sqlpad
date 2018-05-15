@@ -5,7 +5,7 @@ const connection = {
   connection_string: process.env.ODBC_CONNECTION_STRING  // I.e. ensure os variable is set to connection string
 }
 
-const createTable = 'CREATE TABLE test (id integer);'
+const createTable = 'CREATE TABLE test (id integer);' // NOTE test(s) will fail if table already exists, expect empty database
 const insert1 = 'INSERT INTO test (id) VALUES (1);'
 const insert2 = 'INSERT INTO test (id) VALUES (2);'
 const insert3 = 'INSERT INTO test (id) VALUES (3);'
@@ -26,12 +26,11 @@ describe('drivers/ingres_unixodbc', function() {
 
   it('getSchema()', function() {
     return ingres_unixodbc.getSchema(connection).then(schemaInfo => {
-console.log(schemaInfo.dbo);
-      assert(schemaInfo.dbo, 'dbo')
-      assert(schemaInfo.dbo.test, 'dbo.test')
-      const columns = schemaInfo.dbo.test
+      assert(schemaInfo.ingres, 'ingres')  // assuming connecting as Ingres
+      assert(schemaInfo.ingres.test, 'ingres.test')
+      const columns = schemaInfo.ingres.test
       assert.equal(columns.length, 1, 'columns.length')
-      assert.equal(columns[0].table_schema, 'dbo', 'table_schema')
+      assert.equal(columns[0].table_schema, 'ingres', 'table_schema')
       assert.equal(columns[0].table_name, 'test', 'table_name')
       assert.equal(columns[0].column_name, 'id', 'column_name')
       assert.equal(columns[0].data_type, 'integer', 'data_type')
