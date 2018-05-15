@@ -4,6 +4,7 @@ const { formatSchemaQueryResults } = require('../utils')
 const id = 'ingres_unixodbc'
 const name = 'Ingres unixODBC'
 
+// TODO Ingres specific
 const SCHEMA_SQL = `
     SELECT
         table_owner,
@@ -30,20 +31,21 @@ function runQuery(query, connection) {
   const config = {
     user: connection.username,
     password: connection.password,
-    server: connection.host,
-    port: connection.port ? connection.port : 'VW0',
-    database: connection.database
+    connection_string: connection.connection_string
   }
   // TODO use connection pool
 
 
-  var cn = 'Driver={Ingres};Server=@' + config.server + ',' + config.port + ';Database=' + database + ';Uid=' + config.user + ';Pwd=' + config.password;  // Currently very Ingres specific (maybe just add DSN support?)
+  var cn = config.connection_string;
+
+  if (config.user) cn = cn + ';Uid=' + config.user;
+  if (config.password) cn = cn + ';Pwd=' + config.password;
 
   return openConnection(cn).then(connectionStatus => {
     return executeQuery(query)
   }).then(queryResult => {
     console.log(queryResult)
-    odbc.close();
+    odbc.close();  // TODO consider putting into finally()?
     return Promise.resolve({rows: queryResult, incomplete: false})
   })
     .catch(function (e) {
@@ -89,38 +91,24 @@ function getSchema(connection) {
   )
 }
 
-// TODO
-// using same names/descriptions as Microsoft SQL Server (TODO check other drivers terms)
 const fields = [
   {
-    key: 'host',
+    key: 'connection_string',
     formType: 'TEXT',
-    label: 'Host/Server/IP Address'
-  },
-  {
-    key: 'port',
-    formType: 'TEXT',
-    label: 'Port (optional)'
-  },
-  {
-    key: 'database',
-    formType: 'TEXT',
-    label: 'Database'
+    label: 'ODBC connection string, e.g. dsn=NAME or "Driver={Ingres};Server=VNODE;Database=iidbdb"'
   },
   {
     key: 'username',
     formType: 'TEXT',
-    label: 'Database Username'
+    label: 'Database Username (optional)'
   },
   {
     key: 'password',
     formType: 'PASSWORD',
-    label: 'Database Password'
+    label: 'Database Password (optional)'
   }  // TODO encryption option?
 ]
-// TODO drivername / DSN
 
-// TODO - reviewed no change needed?
 module.exports = {
   id,
   name,

@@ -2,12 +2,7 @@ const assert = require('assert')
 const ingres_unixodbc = require('./index.js')
 
 const connection = {
-  name: 'test Ingres unixODBC',
-  driver: 'ingres_unixodbc',
-  host: 'usrc-gwtsX3',
-  database: 'sqlpad',
-  username: 'IGNORED',
-  password: 'IGNORED'
+  connection_string: process.env.ODBC_CONNECTION_STRING  // I.e. ensure os variable is set to connection string
 }
 
 const createTable = 'CREATE TABLE test (id integer);'
