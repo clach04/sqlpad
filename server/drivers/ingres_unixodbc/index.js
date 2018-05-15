@@ -10,7 +10,7 @@ const SCHEMA_SQL = `
         varchar(table_owner) as table_schema,
         varchar(table_name) as table_name,
         varchar(column_name) as column_name,
-        varchar(column_datatype) as data_type
+        lower(varchar(column_datatype)) as data_type
     FROM iicolumns
     WHERE 
         table_owner != '$ingres'
