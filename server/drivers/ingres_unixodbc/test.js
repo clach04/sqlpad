@@ -35,8 +35,8 @@ describe('drivers/ingres_unixodbc', function() {
 
   it('getSchema()', function() {
     return ingres_unixodbc.getSchema(connection).then(schemaInfo => {
-      assert(schemaInfo.ingres, 'ingres')  // assuming connecting as Ingres
-      assert(schemaInfo.ingres.test, 'ingres.test')
+      assert(schemaInfo['ingres'], 'ingres')  // assuming connecting as Ingres
+      assert(schemaInfo['ingres'].test, 'ingres.test')
       const columns = schemaInfo.ingres.test
       assert.equal(columns.length, 1, 'columns.length')
       assert.equal(columns[0].table_schema, 'ingres', 'table_schema')
