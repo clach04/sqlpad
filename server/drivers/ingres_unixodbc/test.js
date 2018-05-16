@@ -4,6 +4,7 @@ const ingres_unixodbc = require('./index.js')
 const connection = {
   connection_string: process.env.ODBC_CONNECTION_STRING  // I.e. ensure os variable is set to connection string
 }
+const test_schema_name =  'ingres'  // assuming connecting as Ingres
 
 const createTable = 'CREATE TABLE test (id integer);' // NOTE test(s) will fail if table already exists, expect empty database
 const insert1 = 'INSERT INTO test (id) VALUES (1);'
@@ -35,11 +36,11 @@ describe('drivers/ingres_unixodbc', function() {
 
   it('getSchema()', function() {
     return ingres_unixodbc.getSchema(connection).then(schemaInfo => {
-      assert(schemaInfo['ingres'], 'ingres')  // assuming connecting as Ingres
-      assert(schemaInfo['ingres'].test, 'ingres.test')
+      assert(schemaInfo[test_schema_name], test_schema_name)
+      assert(schemaInfo[test_schema_name].test, test_schema_name + '.test')
       const columns = schemaInfo.ingres.test
       assert.equal(columns.length, 1, 'columns.length')
-      assert.equal(columns[0].table_schema, 'ingres', 'table_schema')
+      assert.equal(columns[0].table_schema, test_schema_name, 'table_schema')
       assert.equal(columns[0].table_name, 'test', 'table_name')
       assert.equal(columns[0].column_name, 'id', 'column_name')
       assert.equal(columns[0].data_type, 'integer', 'data_type')
