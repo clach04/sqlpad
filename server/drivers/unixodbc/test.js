@@ -39,7 +39,7 @@ describe('drivers/unixodbc', function() {
     return unixodbc.getSchema(connection).then(schemaInfo => {
       assert(schemaInfo[test_schema_name], test_schema_name)
       assert(schemaInfo[test_schema_name].test, test_schema_name + '.test')
-      const columns = schemaInfo.ingres.test
+      const columns = schemaInfo[test_schema_name].test
       assert.equal(columns.length, 1, 'columns.length')
       assert.equal(columns[0].table_schema, test_schema_name, 'table_schema')
       assert.equal(columns[0].table_name, 'test', 'table_name')
