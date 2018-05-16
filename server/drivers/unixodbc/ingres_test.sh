@@ -18,6 +18,8 @@ export II_ODBC_WCHAR_SIZE=2
 #  message: '[unixODBC][',
 #  state: '0' }
 
+# set connection information
+# ODBC_CONNECTION_STRING=Driver={Ingres};Server=VNODE;Database=sqlpad
 
 npx mocha ./test.js
 #docker-compose down
