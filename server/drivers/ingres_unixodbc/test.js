@@ -10,6 +10,15 @@ const insert1 = 'INSERT INTO test (id) VALUES (1);'
 const insert2 = 'INSERT INTO test (id) VALUES (2);'
 const insert3 = 'INSERT INTO test (id) VALUES (3);'
 
+// TODO test more datatypes:
+//   * integer (different sizes
+//   * float
+//   * char
+//   * varchar
+//   * decimal
+//   * date
+//   * datetime
+//   * interval
 describe('drivers/ingres_unixodbc', function() {
   before(function() {
     this.timeout(10000)
