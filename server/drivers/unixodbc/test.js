@@ -1,10 +1,11 @@
 const assert = require('assert')
-const ingres_unixodbc = require('./index.js')
+const unixodbc = require('./index.js')
 
 const connection = {
   connection_string: process.env.ODBC_CONNECTION_STRING  // I.e. ensure os variable is set to connection string
 }
 const test_schema_name =  'ingres'  // assuming connecting as Ingres
+//const test_schema_name =  'dba'  // sqlite3 does not really have owner
 
 const createTable = 'CREATE TABLE test (id integer);' // NOTE test(s) will fail if table already exists, expect empty database
 const insert1 = 'INSERT INTO test (id) VALUES (1);'
@@ -20,22 +21,22 @@ const insert3 = 'INSERT INTO test (id) VALUES (3);'
 //   * date
 //   * datetime
 //   * interval
-describe('drivers/ingres_unixodbc', function() {
+describe('drivers/unixodbc', function() {
   before(function() {
     this.timeout(10000)
-    return ingres_unixodbc
+    return unixodbc
       .runQuery(createTable, connection)
-      .then(() => ingres_unixodbc.runQuery(insert1, connection))
-      .then(() => ingres_unixodbc.runQuery(insert2, connection))
-      .then(() => ingres_unixodbc.runQuery(insert3, connection))
+      .then(() => unixodbc.runQuery(insert1, connection))
+      .then(() => unixodbc.runQuery(insert2, connection))
+      .then(() => unixodbc.runQuery(insert3, connection))
   })
 
   it('tests connection', function() {
-    return ingres_unixodbc.testConnection(connection)
+    return unixodbc.testConnection(connection)
   })
 
   it('getSchema()', function() {
-    return ingres_unixodbc.getSchema(connection).then(schemaInfo => {
+    return unixodbc.getSchema(connection).then(schemaInfo => {
       assert(schemaInfo[test_schema_name], test_schema_name)
       assert(schemaInfo[test_schema_name].test, test_schema_name + '.test')
       const columns = schemaInfo.ingres.test
@@ -48,7 +49,7 @@ describe('drivers/ingres_unixodbc', function() {
   })
 
   it('runQuery under limit', function() {
-    return ingres_unixodbc
+    return unixodbc
       .runQuery('SELECT * FROM test WHERE id = 1;', connection)
       .then(results => {
         assert(!results.incomplete, 'not incomplete')
@@ -57,7 +58,7 @@ describe('drivers/ingres_unixodbc', function() {
   })
 
   it('runQuery over limit', function() {
-    return ingres_unixodbc
+    return unixodbc
       .runQuery('SELECT * FROM test;', connection)
       .then(results => {
         assert(results.incomplete, 'incomplete')

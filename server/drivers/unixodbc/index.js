@@ -7,7 +7,7 @@ const name = 'unixODBC'
 // TODO Ingres specific
 // as of 2018-05-15 https://github.com/wankdanker/node-odbc does not offer a schema interface
 // Consider adding a SCHEMA_SQL config option?
-const SCHEMA_SQL = `
+const SCHEMA_SQL_INGRES = `
     SELECT
         varchar(table_owner) as table_schema,
         varchar(table_name) as table_name,
@@ -21,6 +21,18 @@ const SCHEMA_SQL = `
         table_name,
         column_sequence
 `
+const SCHEMA_SQL_SQLITE = `
+    SELECT
+        'dba' as table_schema,
+        name as table_name,
+        'unknown' as column_name,
+        'unknown' as data_type
+    FROM sqlite_master
+    WHERE type = 'table';
+
+`
+
+const SCHEMA_SQL = SCHEMA_SQL_INGRES;
 
 /**
  * Run query for connection
