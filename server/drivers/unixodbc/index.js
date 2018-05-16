@@ -1,8 +1,8 @@
 var odbc = require('odbc')()
 const { formatSchemaQueryResults } = require('../utils')
 
-const id = 'ingres_unixodbc'
-const name = 'Ingres unixODBC'
+const id = 'unixodbc'
+const name = 'unixODBC'
 
 // TODO Ingres specific
 // as of 2018-05-15 https://github.com/wankdanker/node-odbc does not offer a schema interface
