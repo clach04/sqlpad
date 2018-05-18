@@ -10,15 +10,15 @@ const name = 'unixODBC'
 // As of 2018-05-15 https://github.com/wankdanker/node-odbc does not offer a schema interface.
 
 const SCHEMA_SQL_INFORMATION_SCHEMA = `
-	SELECT
-	    c.table_schema as table_schema,
-	    c.table_name as table_name,
-	    c.column_name as column_name,
-	    c.data_type as data_type
-	FROM
-	    INFORMATION_SCHEMA.columns c
-	WHERE
-	    c.table_schema NOT IN ('INFORMATION_SCHEMA', 'information_schema')
+  SELECT
+      c.table_schema as table_schema,
+      c.table_name as table_name,
+      c.column_name as column_name,
+      c.data_type as data_type
+  FROM
+      INFORMATION_SCHEMA.columns c
+  WHERE
+      c.table_schema NOT IN ('INFORMATION_SCHEMA', 'information_schema')
 `
 
 /**
@@ -36,7 +36,6 @@ function runQuery(query, connection) {
   }
   // TODO use connection pool
   // TODO handle connection.maxRows
-
 
   var cn = config.connection_string;
 
