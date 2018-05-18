@@ -32,7 +32,26 @@ const SCHEMA_SQL_SQLITE = `
 
 `
 
-const SCHEMA_SQL = SCHEMA_SQL_INGRES;
+// Default to using INFORMATION_SCHEMA with old-style join for maximum compatibility
+// INFORMATION_SCHEMA is not supported by every DBMS but it is supported by
+// enough to be a good default (in the absence of ODBC meta data access).
+// As of 2018-05-15 https://github.com/wankdanker/node-odbc does not offer a schema interface.
+
+const SCHEMA_SQL_INFORMATION_SCHEMA = `
+	SELECT
+	    c.table_schema as table_schema,
+	    c.table_name as table_name,
+	    c.column_name as column_name,
+	    c.data_type as data_type
+	FROM
+	    INFORMATION_SCHEMA.columns c
+	WHERE
+	    c.table_schema NOT IN ('INFORMATION_SCHEMA', 'information_schema')
+`
+
+//const SCHEMA_SQL = SCHEMA_SQL_INGRES;
+//const SCHEMA_SQL = SCHEMA_SQL_SQLITE;
+const SCHEMA_SQL = SCHEMA_SQL_INFORMATION_SCHEMA;
 
 /**
  * Run query for connection
