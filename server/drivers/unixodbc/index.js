@@ -19,6 +19,10 @@ const SCHEMA_SQL_INFORMATION_SCHEMA = `
       INFORMATION_SCHEMA.columns c
   WHERE
       c.table_schema NOT IN ('INFORMATION_SCHEMA', 'information_schema')
+  ORDER BY
+    c.table_schema,
+    c.table_name,
+    c.ordinal_position
 `
 
 /**
