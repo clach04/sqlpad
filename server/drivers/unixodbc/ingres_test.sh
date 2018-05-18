@@ -21,5 +21,11 @@ export II_ODBC_WCHAR_SIZE=2
 # set connection information
 # ODBC_CONNECTION_STRING=Driver={Ingres};Server=VNODE;Database=sqlpad
 
-npx mocha ./test.js
+# hack FIXME
+echo 'drop table test\p\g' | sql VNODE::sqlpad
+
+
+#npx mocha ./test.js
+npx mocha ./"test_ingres.js"
+
 #docker-compose down

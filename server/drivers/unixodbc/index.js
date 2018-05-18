@@ -4,34 +4,6 @@ const { formatSchemaQueryResults } = require('../utils')
 const id = 'unixodbc'
 const name = 'unixODBC'
 
-// TODO Ingres specific
-// as of 2018-05-15 https://github.com/wankdanker/node-odbc does not offer a schema interface
-// Consider adding a SCHEMA_SQL config option?
-const SCHEMA_SQL_INGRES = `
-    SELECT
-        varchar(table_owner) as table_schema,
-        varchar(table_name) as table_name,
-        varchar(column_name) as column_name,
-        lower(varchar(column_datatype)) as data_type
-    FROM iicolumns
-    WHERE
-        table_owner != '$ingres'
-    ORDER BY
-        table_owner,
-        table_name,
-        column_sequence
-`
-const SCHEMA_SQL_SQLITE = `
-    SELECT
-        'dba' as table_schema,
-        name as table_name,
-        'unknown' as column_name,
-        'unknown' as data_type
-    FROM sqlite_master
-    WHERE type = 'table';
-
-`
-
 // Default to using INFORMATION_SCHEMA with old-style join for maximum compatibility
 // INFORMATION_SCHEMA is not supported by every DBMS but it is supported by
 // enough to be a good default (in the absence of ODBC meta data access).
@@ -48,10 +20,6 @@ const SCHEMA_SQL_INFORMATION_SCHEMA = `
 	WHERE
 	    c.table_schema NOT IN ('INFORMATION_SCHEMA', 'information_schema')
 `
-
-//const SCHEMA_SQL = SCHEMA_SQL_INGRES;
-//const SCHEMA_SQL = SCHEMA_SQL_SQLITE;
-const SCHEMA_SQL = SCHEMA_SQL_INFORMATION_SCHEMA;
 
 /**
  * Run query for connection
@@ -72,6 +40,7 @@ function runQuery(query, connection) {
 
   var cn = config.connection_string;
 
+  // Not all drivers require auth
   if (config.user) cn = cn + ';Uid=' + config.user;
   if (config.password) cn = cn + ';Pwd=' + config.password;
 
@@ -119,7 +88,8 @@ function testConnection(connection) {
  * @param {*} connection
  */
 function getSchema(connection) {
-  return runQuery(SCHEMA_SQL, connection).then(queryResult =>
+  schema_sql = connection.schema_sql ? connection.schema_sql : SCHEMA_SQL_INFORMATION_SCHEMA;
+  return runQuery(schema_sql, connection).then(queryResult =>
     formatSchemaQueryResults(queryResult)
   )
 }
@@ -129,6 +99,11 @@ const fields = [
     key: 'connection_string',
     formType: 'TEXT',
     label: 'ODBC connection string, e.g. dsn=NAME or "Driver={Ingres};Server=VNODE;Database=iidbdb"'
+  },
+  {
+    key: 'schema_sql',
+    formType: 'TEXT',
+    label: 'Database sql to lookup schema (optional, if ommited default to checking INFORMATION_SCHEMA)'
   },
   {
     key: 'username',
@@ -150,3 +125,4 @@ module.exports = {
   runQuery,
   testConnection
 }
+

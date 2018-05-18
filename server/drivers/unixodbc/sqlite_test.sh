@@ -4,6 +4,13 @@
 # NOTE defaults for Ubuntu
 # /etc/odbcinst.ini. should contain defs for sqlite3 without the need to edit/create manually
 
+# unset to ensure defaults used
+unset ODBCINI
+unset ODBCINSTINI
+unset ODBCSYSINI
+
+
+
 # skip ODBCINI, do not use a DSN
 #export ODBCINI=/home/user/odbc.ini
 #export ODBCINSTINI=/home/user/odbcinst.ini
@@ -18,6 +25,6 @@ test_db_name=/tmp/tmp_sqlpad.db
 rm ${test_db_name}
 export ODBC_CONNECTION_STRING="Driver={SQLite3};Database=${test_db_name}"
 
-npx mocha ./test.js
-
+#npx mocha ./test.js
+npx mocha ./test_sqlite.js
 
