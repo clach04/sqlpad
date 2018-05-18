@@ -97,7 +97,7 @@ const fields = [
   {
     key: 'connection_string',
     formType: 'TEXT',
-    label: 'ODBC connection string, e.g. dsn=NAME or "Driver={Ingres};Server=VNODE;Database=iidbdb"'
+    label: 'ODBC connection string. Examples:\ndsn=NAME\nDriver={SQLite3};Database=/tmp/my.db\n"Driver={Ingres};Server=VNODE;Database=mydb"'
   },
   {
     key: 'schema_sql',
